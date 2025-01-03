@@ -120,7 +120,7 @@ Eg:
 
 ```javascript
 export const personalData = {
-  name: "Rener Fostanes",
+  name: "Renier Fostanes",
   profile: '/profile.png',
   designation: "Software Developer",
   description: "I am a passionate Software Engineer currently pursuing a degree in Computer Science at Surigao del Norte State University. My journey in the world of technology is driven by a deep enthusiasm for coding, problem-solving, and an unwavering commitment to learning new technologies.",
