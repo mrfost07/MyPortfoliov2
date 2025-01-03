@@ -1,36 +1,36 @@
 export const projectsData = [
     {
         id: 1,
-        name: 'AI Powered Financial App',
-        description: "Me and my team built an AI-powered financial mobile application. I have developed API using Express, Typescript, OpenAI, AWS, and MongoDB. Used OTP via AWS SES, Google, and Facebook for the authentication system. Built AI assistants using OpenAI's latest model and trained using our dataset. Voice messages are converted to text using AWS Transcribe. The app fetches data from Google Sheets and generates a PDF term sheet, sent via AWS SES.",
-        tools: ['Express', 'MongoDB', 'OpenAI API', 'AWS SES', 'AWS S3', 'Node Mailer', 'Joi', 'Puppeteer', 'EC2', 'PM2', 'Nginx'],
-        role: 'Backend Developer',
+        name: 'Fozt Entertainment',
+        description: "All-in-one entertainment app featuring movies, shows, music, and interactive content.\nFozt is your all-in-one entertainment app, featuring movies, shows, music, and interactive content. With personalized recommendations and a seamless experience, it's your go-to platform for endless fun and excitement across all genres.",
+        tools: ["TypeScript", "PL/pgSQL", "JavaScript"],
+        role: 'Fullstack Developer',
         code: '',
         demo: '',
     },
     {
         id: 2,
-        name: 'Travel Agency App',
-        description: 'I have designed and developed a full-stack web app for 2Expedition, a travel agency in Armenia. I created the UI using NextJS, Typescript, MUI, TailwindCSS, Google Maps, Sun-Editor, and React Slick. The app supports multiple languages and currencies. I developed the API using NestJS, Typescript, MySQL, TypeORM, AWS, and Nodemailer. I deployed the front-end app to AWS Amplify and the back-end app to AWS EC2.',
-        tools: ['NextJS', 'Tailwind CSS', "Google Maps", "NestJS", "TypeScript", "MySQL", "AWS S3", "Sun-Editor", "Gmail Passkey"],
+        name: 'Lost and Found System',
+        description: 'Comprehensive system for managing lost and found items with admin controls.\nThe Lost and Found Item Management System helps manage lost items by allowing admins to add, update, and delete items, while users can search for lost items. It features item categorization, photo uploads, and search functionality, all in an easy-to-use interface built with Streamlit.',
+        tools: ["Python", "Streamlit", "SQL"],
         role: 'Full Stack Developer',
         code: '',
         demo: '',
     },
     {
         id: 3,
-        name: 'AI Powered Real Estate',
-        description: 'My team built an AI-based real estate app using Replicate API and OpenAI. We used Express, Typescript, OpenAI, Replicate, Stripe, and Mongoose to develop the API. We utilized NextJS, Formik, TailwindCSS, and other npm libraries for the UI. We have trained multiple AI assistants using the latest GPT model and integrated Replicate API for image processing. We added role-based auth, subscription plans, Cron job scheduling, and payment integration with Stripe.',
-        tools: ['React', 'Bootstrap', 'SCSS', 'Stripe', 'Express', 'TypeScript', 'MongoDB', 'Azure Blob', 'OpenAI API', 'Replicate AI', 'Cronjob', 'JWT'],
+        name: 'Interactive Recipe Journal',
+        description: 'Digital recipe management system with nutritional tracking.\nA digital recipe journal that lets users save, update, and search recipes while tracking their nutritional content. The application provides a user-friendly interface for managing recipes and monitoring dietary information.',
+        tools: ["Python", "SQL", "UI/UX"],
         code: '',
         role: 'Full Stack Developer',
         demo: '',
     },
     {
         id: 4,
-        name: 'Newsroom Management',
-        description: "My team and I developed a newspaper management dashboard application called Newsroom Management. As a front-end developer, I worked on creating the dashboard using NextJS, Material UI, Redux, Calendar, and other necessary npm libraries. We used React Redux to manage the application's state and React-hook-form and Sun Editor to handle forms.",
-        tools: ['NextJS', 'Material UI', 'Redux', 'Sun Editor', "Calendar"],
+        name: '02seven AI',
+        description: "GUI application with login system and AI-powered Q&A interface.\nThe '02-Seven AI' program is a graphical user interface (GUI) application developed using Python's Tkinter library. It features a login form for authentication and a main program that interacts with the user through a question-and-answer interface, providing responses based on predefined commands and Wikipedia searches.",
+        tools: ["Python", "Tkinter", "AI"],
         code: '',
         demo: '',
         role: 'Full Stack Developer',
@@ -38,15 +38,3 @@ export const projectsData = [
 ];
 
 
-// Do not remove any property.
-// Leave it blank instead as shown below
-
-// {
-//     id: 1,
-//     name: '',
-//     description: "",
-//     tools: [],
-//     role: '',
-//     code: '',
-//     demo: '',
-// },
