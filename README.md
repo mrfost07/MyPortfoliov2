@@ -1,5 +1,5 @@
 <p align="center" width="100%">
-    <img height="100" src="https://github.com/said7388/developer-portfolio/assets/77630868/c0064908-cd5f-4751-a77c-eba90a62b55c">
+    <img height="100" src="https://img.freepik.com/free-vector/hand-drawn-web-developers_23-2148819604.jpg?t=st=1735895337~exp=1735898937~hmac=38867a4d4098e1c687df0133c04aa4329cb9fda8297353eaf00dd6956df9284e&w=996">
 </p>
 
 ---
