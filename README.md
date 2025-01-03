@@ -120,21 +120,21 @@ Eg:
 
 ```javascript
 export const personalData = {
-  name: "ABU SAID",
-  profile: "/profile.png",
-  designation: "Full-Stack Software Developer",
-  description: "My name is ABU SAID....",
-  email: "abusaid7388@gmail.com",
-  phone: "+8801608797655",
-  address: "Dhaka, Bangladesh",
-  github: "https://github.com/said7388",
-  facebook: "https://www.facebook.com/abusaid.riyaz/",
-  linkedIn: "https://www.linkedin.com/in/abu-said-bd/",
-  twitter: "https://twitter.com/said7388",
-  stackOverflow: "https://stackoverflow.com/users/16840768/abu-said",
-  leetcode: "https://leetcode.com/said3812/",
-  devUsername: "said7388",
-  resume: "...",
+  name: "Rener Fostanes",
+  profile: '/profile.png',
+  designation: "Software Developer",
+  description: "I am a passionate Software Engineer currently pursuing a degree in Computer Science at Surigao del Norte State University. My journey in the world of technology is driven by a deep enthusiasm for coding, problem-solving, and an unwavering commitment to learning new technologies.",
+  email: 'fostanesmarkrenier@gmail.com',
+  phone: '+639709575227',
+  address: 'Malimono, Surigao del Norte, Philippines',
+  github: 'https://github.com/mrfost07',
+  facebook: 'https://www.facebook.com/renier.dgaf',
+  linkedIn: 'https://www.linkedin.com/in/mark-renier-fostanes-116020272/',
+  twitter: 'https://x.com/FostanesMa23064',
+  stackOverflow: 'https://stackoverflow.com/users/28470053/mark-renier-fostanes',
+  leetcode: "https://leetcode.com/u/fostanesmarkrenier/",
+  devUsername: "Renier Fostanes",
+  resume: "..."
 };
 ```
 
