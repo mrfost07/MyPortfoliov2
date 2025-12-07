@@ -1,32 +1,85 @@
-import { projectsData } from '@/utils/data/projects-data';
-import ProjectCard from './project-card';
+"use client";
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaCode, FaExternalLinkAlt } from 'react-icons/fa';
 
-const Projects = () => {
-
+function Projects({ projects }) {
   return (
-    <div id='projects' className="relative z-50  my-12 lg:my-24">
-      <div className="sticky top-10">
-        <div className="w-[80px] h-[80px] bg-violet-100 rounded-full absolute -top-3 left-0 translate-x-1/2 filter blur-3xl  opacity-30"></div>
-        <div className="flex items-center justify-start relative">
-          <span className="bg-[#1a1443] absolute left-0  w-fit text-white px-5 py-3 text-xl rounded-md">
+    <div id='projects' className="relative z-50 my-12 lg:my-24">
+      <div className="flex justify-center my-5 lg:py-8">
+        <div className="flex items-center">
+          <span className="w-24 h-[2px] bg-[#1a1443]"></span>
+          <span className="bg-[#1a1443] w-fit text-white p-2 px-5 text-xl rounded-md">
             PROJECTS
           </span>
-          <span className="w-full h-[2px] bg-[#1a1443]"></span>
+          <span className="w-24 h-[2px] bg-[#1a1443]"></span>
         </div>
       </div>
 
-      <div className="pt-24">
-        <div className="flex flex-col gap-6">
-          {projectsData.slice(0, 4).map((project, index) => (
-            <div
-              id={`sticky-card-${index + 1}`}
+      <div className="py-8 relative">
+        {/* Vertical Line */}
+        <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-[#1a1443] transform -translate-x-1/2 hidden md:block"></div>
+
+        <div className="flex flex-col gap-12">
+          {projects.map((project, index) => (
+            <motion.div
               key={index}
-              className="sticky-card w-full mx-auto max-w-2xl sticky"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              viewport={{ once: false, amount: 0.3 }}
+              className={`flex flex-col md:flex-row gap-8 items-center ${index % 2 === 0 ? 'md:flex-row-reverse' : ''}`}
             >
-              <div className="box-border flex items-center justify-center rounded shadow-[0_0_30px_0_rgba(0,0,0,0.3)] transition-all duration-[0.5s]">
-                <ProjectCard project={project} />
+              {/* Timeline Dot */}
+              <div className="absolute left-4 md:left-1/2 w-4 h-4 bg-[#16f2b3] rounded-full transform -translate-x-1/2 border-4 border-[#0d1224] z-10 hidden md:block"></div>
+
+              {/* Content */}
+              <div className="w-full md:w-1/2 px-4">
+                <div className="bg-[#11152c] p-6 rounded-lg border border-[#2a3241] hover:border-[#16f2b3] transition-all duration-300 group">
+                  <div className="relative overflow-hidden rounded-lg mb-4 h-48 md:h-64">
+                    {project.image && project.image.trim() !== '' ? (
+                      <Image
+                        src={project.image}
+                        alt={project.name}
+                        fill
+                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-[#1a202c] flex items-center justify-center text-gray-500">
+                        No Image
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-4">
+                      {project.code_url && (
+                        <Link href={project.code_url} target="_blank" className="p-3 bg-[#1a202c] rounded-full text-white hover:text-[#16f2b3] hover:bg-[#2a3241] transition-all">
+                          <FaCode size={20} />
+                        </Link>
+                      )}
+                      {project.demo_url && (
+                        <Link href={project.demo_url} target="_blank" className="p-3 bg-[#1a202c] rounded-full text-white hover:text-[#16f2b3] hover:bg-[#2a3241] transition-all">
+                          <FaExternalLinkAlt size={20} />
+                        </Link>
+                      )}
+                    </div>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-white mb-1">{project.name}</h3>
+                  <p className="text-sm text-[#16f2b3] mb-3">{project.role}</p>
+                  <p className="text-gray-400 text-sm mb-4 line-clamp-3">{project.description}</p>
+
+                  <div className="flex flex-wrap gap-2">
+                    {project.tools && project.tools.map((tool, i) => (
+                      <span key={i} className="text-xs bg-[#1a202c] px-2 py-1 rounded text-gray-300 border border-[#2a3241]">{tool}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
+
+              {/* Spacer for the other side */}
+              <div className="w-full md:w-1/2 hidden md:block"></div>
+            </motion.div>
           ))}
         </div>
       </div>

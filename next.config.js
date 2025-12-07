@@ -1,5 +1,5 @@
 const path = require('path')
- 
+
 
 module.exports = {
   sassOptions: {
@@ -20,6 +20,11 @@ module.exports = {
       {
         protocol: 'https',
         hostname: 'media2.dev.to',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'xipdmasptgmgunlepmin.supabase.co',
         pathname: '**',
       },
     ],
