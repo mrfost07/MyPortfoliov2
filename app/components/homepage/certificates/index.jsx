@@ -119,10 +119,10 @@ function Certificates({ certificates }) {
                                     {certificates.length > 1 && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); prevSlide(); }}
-                                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-sm text-white/70 hover:bg-white/20 hover:text-white transition-all z-10"
+                                            className="absolute left-2 top-1/2 -translate-y-1/2 p-2 rounded-full text-white hover:text-pink-500 transition-all z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                                             aria-label="Previous"
                                         >
-                                            <ChevronLeft size={20} />
+                                            <ChevronLeft size={24} />
                                         </button>
                                     )}
 
@@ -130,10 +130,10 @@ function Certificates({ certificates }) {
                                     {certificates.length > 1 && (
                                         <button
                                             onClick={(e) => { e.stopPropagation(); nextSlide(); }}
-                                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full bg-white/10 backdrop-blur-sm text-white/70 hover:bg-white/20 hover:text-white transition-all z-10"
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-full text-white hover:text-pink-500 transition-all z-10 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]"
                                             aria-label="Next"
                                         >
-                                            <ChevronRight size={20} />
+                                            <ChevronRight size={24} />
                                         </button>
                                     )}
                                 </div>
