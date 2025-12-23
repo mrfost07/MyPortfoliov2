@@ -107,7 +107,7 @@ function Navbar() {
 
           {/* Footer */}
           <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-[#1a1443]">
-            <p className="text-gray-500 text-xs text-center">© 2024 Renier F</p>
+            <p className="text-gray-500 text-xs text-center">© 2025 Renier F</p>
           </div>
         </div>
       </div>

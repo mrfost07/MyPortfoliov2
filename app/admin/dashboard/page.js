@@ -16,6 +16,8 @@ export default function AdminDashboard() {
     const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+    const [loggingOut, setLoggingOut] = useState(false);
 
     useEffect(() => {
         const checkUser = async () => {
@@ -40,6 +42,19 @@ export default function AdminDashboard() {
         );
     }
 
+    // Logging out screen
+    if (loggingOut) {
+        return (
+            <div className="min-h-screen bg-[#0d1224] flex items-center justify-center">
+                <div className="text-center">
+                    <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                    <p className="text-white text-lg">Signing out...</p>
+                    <p className="text-gray-500 text-sm mt-2">Redirecting to homepage</p>
+                </div>
+            </div>
+        );
+    }
+
     const tabs = [
         { id: 'profile', label: 'Profile', icon: User },
         { id: 'experience', label: 'Experience', icon: Briefcase },
@@ -51,8 +66,12 @@ export default function AdminDashboard() {
     ];
 
     const handleLogout = async () => {
+        setShowLogoutConfirm(false);
+        setLoggingOut(true);
         await supabase.auth.signOut();
-        router.push('/');
+        setTimeout(() => {
+            router.push('/');
+        }, 1000);
     };
 
     const handleTabChange = (tabId) => {
@@ -62,6 +81,35 @@ export default function AdminDashboard() {
 
     return (
         <div className="min-h-screen bg-[#0d1224] text-white">
+            {/* Logout Confirmation Modal */}
+            {showLogoutConfirm && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                    <div className="bg-[#1a202c] rounded-xl p-6 max-w-sm w-full border border-[#2a3241] shadow-2xl">
+                        <div className="text-center">
+                            <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <LogOut size={24} className="text-red-500" />
+                            </div>
+                            <h3 className="text-lg font-bold text-white mb-2">Confirm Logout</h3>
+                            <p className="text-gray-400 text-sm mb-6">Are you sure you want to sign out?</p>
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowLogoutConfirm(false)}
+                                    className="flex-1 px-4 py-2.5 bg-[#2a3241] hover:bg-[#3a4251] text-white rounded-lg text-sm font-medium transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex-1 px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-all"
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <header className="sticky top-0 z-50 bg-[#0d1224]/95 backdrop-blur-sm border-b border-[#2a3241]">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
@@ -78,7 +126,7 @@ export default function AdminDashboard() {
                                 {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
                             </button>
                             <button
-                                onClick={handleLogout}
+                                onClick={() => setShowLogoutConfirm(true)}
                                 className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-600/80 hover:bg-red-600 rounded-lg text-sm font-medium transition-all"
                             >
                                 <LogOut size={18} />
