@@ -1,6 +1,7 @@
-import { getProfile, getExperiences, getSkills, getEducations, getProjects, getBlogs } from "@/utils/data-fetch";
+import { getProfile, getExperiences, getSkills, getEducations, getProjects, getAchievements, getCertificates } from "@/utils/data-fetch";
 import AboutSection from "./components/homepage/about";
-import Blog from "./components/homepage/blog";
+import Achievements from "./components/homepage/achievements";
+import Certificates from "./components/homepage/certificates";
 import ContactSection from "./components/homepage/contact";
 import Education from "./components/homepage/education";
 import Experience from "./components/homepage/experience";
@@ -16,7 +17,8 @@ export default async function Home() {
   const skills = await getSkills();
   const educations = await getEducations();
   const projects = await getProjects();
-  const blogs = await getBlogs();
+  const achievements = await getAchievements();
+  const certificates = await getCertificates();
 
   // Fallback if no profile data yet (to avoid crash)
   if (!profile) {
@@ -38,7 +40,8 @@ export default async function Home() {
       <Skills skills={skills} />
       <Projects projects={projects} />
       <Education educations={educations} />
-      <Blog blogs={blogs} />
+      <Achievements achievements={achievements} />
+      <Certificates certificates={certificates} />
       <ContactSection profile={profile} />
     </div>
   )

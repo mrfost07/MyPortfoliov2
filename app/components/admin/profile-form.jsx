@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/utils/supabase-client';
 import { toast } from 'react-toastify';
+import { User, Mail, Phone, MapPin, Github, Linkedin, Facebook, Twitter, FileText, Image as ImageIcon, Save } from 'lucide-react';
 
 export default function ProfileForm() {
     const [profile, setProfile] = useState({
@@ -10,6 +11,7 @@ export default function ProfileForm() {
         leetcode: '', dev_username: '', resume: '', profile_image: ''
     });
     const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
     const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
@@ -40,7 +42,7 @@ export default function ProfileForm() {
             if (!file) return;
 
             const fileExt = file.name.split('.').pop();
-            const fileName = `${Math.random()}.${fileExt}`;
+            const fileName = `${Date.now()}-${Math.random()}.${fileExt}`;
             const filePath = `profile/${fileName}`;
 
             const { error: uploadError } = await supabase.storage
@@ -65,106 +67,156 @@ export default function ProfileForm() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSaving(true);
         try {
-            // Remove id if it exists to avoid issues with upsert if it's not a valid uuid or if we want to let DB handle it
-            // Actually upsert needs a primary key match to update. 
-            // If we have an ID, we use it. If not, we don't send it?
-            // But we only have one profile.
-
             const { data, error } = await supabase
                 .from('profile')
                 .upsert(profile)
                 .select();
 
             if (error) throw error;
-            toast.success('Profile updated!');
+            toast.success('Profile saved successfully!');
         } catch (error) {
             console.error(error);
             toast.error('Error updating profile');
+        } finally {
+            setSaving(false);
         }
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-2 border-[#16f2b3] border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        );
+    }
+
+    const InputField = ({ icon: Icon, label, name, type = "text", placeholder, required = false }) => (
+        <div className="flex flex-col">
+            <label className="mb-1.5 text-xs sm:text-sm text-gray-400 flex items-center gap-1.5">
+                {Icon && <Icon size={14} />}
+                {label} {required && <span className="text-pink-500">*</span>}
+            </label>
+            <input
+                type={type}
+                name={name}
+                value={profile[name] || ''}
+                onChange={handleChange}
+                placeholder={placeholder}
+                required={required}
+                className="w-full bg-[#0d1224] px-3 py-2.5 sm:p-3 rounded-lg border border-[#2a3241] focus:ring-2 focus:ring-[#16f2b3]/50 focus:border-[#16f2b3] outline-none transition-all duration-200 text-sm sm:text-base text-white placeholder-gray-600"
+            />
+        </div>
+    );
+
+    const TextAreaField = ({ label, name, placeholder, rows = 3 }) => (
+        <div className="flex flex-col">
+            <label className="mb-1.5 text-xs sm:text-sm text-gray-400">{label}</label>
+            <textarea
+                name={name}
+                value={profile[name] || ''}
+                onChange={handleChange}
+                placeholder={placeholder}
+                rows={rows}
+                className="w-full bg-[#0d1224] px-3 py-2.5 sm:p-3 rounded-lg border border-[#2a3241] focus:ring-2 focus:ring-[#16f2b3]/50 focus:border-[#16f2b3] outline-none transition-all duration-200 text-sm sm:text-base text-white placeholder-gray-600 resize-none"
+            />
+        </div>
+    );
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Basic Info */}
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Name</label>
-                    <input name="name" value={profile.name || ''} onChange={handleChange} placeholder="Name" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Designation</label>
-                    <input name="designation" value={profile.designation || ''} onChange={handleChange} placeholder="Designation" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col md:col-span-2">
-                    <label className="mb-1 text-sm text-gray-400">Description (Short tagline for Hero section)</label>
-                    <textarea name="description" value={profile.description || ''} onChange={handleChange} placeholder="A short intro shown in the hero section" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" rows="2" />
-                </div>
-                <div className="flex flex-col md:col-span-2">
-                    <label className="mb-1 text-sm text-gray-400">Bio (Who I am? - About section)</label>
-                    <textarea name="bio" value={profile.bio || ''} onChange={handleChange} placeholder="Detailed bio for the About Me section" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" rows="5" />
-                </div>
+        <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="flex items-center justify-between">
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                    <User className="text-[#16f2b3]" size={24} />
+                    Edit Profile
+                </h2>
+            </div>
 
-                {/* Contact */}
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Email</label>
-                    <input name="email" value={profile.email || ''} onChange={handleChange} placeholder="Email" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
+            {/* Basic Info Section */}
+            <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider border-b border-[#2a3241] pb-2">
+                    Basic Information
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <InputField icon={User} label="Name" name="name" placeholder="Your full name" required />
+                    <InputField label="Designation" name="designation" placeholder="e.g., Software Engineer" required />
                 </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Phone</label>
-                    <input name="phone" value={profile.phone || ''} onChange={handleChange} placeholder="Phone" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Address</label>
-                    <input name="address" value={profile.address || ''} onChange={handleChange} placeholder="Address" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
+                <TextAreaField label="Hero Description" name="description" placeholder="Short tagline for Hero section" rows={2} />
+                <TextAreaField label="About Me (Bio)" name="bio" placeholder="Detailed bio for the About section" rows={4} />
+            </div>
 
-                {/* Socials */}
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">GitHub URL</label>
-                    <input name="github" value={profile.github || ''} onChange={handleChange} placeholder="GitHub URL" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">LinkedIn URL</label>
-                    <input name="linkedin" value={profile.linkedin || ''} onChange={handleChange} placeholder="LinkedIn URL" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Facebook URL</label>
-                    <input name="facebook" value={profile.facebook || ''} onChange={handleChange} placeholder="Facebook URL" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Twitter URL</label>
-                    <input name="twitter" value={profile.twitter || ''} onChange={handleChange} placeholder="Twitter URL" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">StackOverflow URL</label>
-                    <input name="stackoverflow" value={profile.stackoverflow || ''} onChange={handleChange} placeholder="StackOverflow URL" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">LeetCode URL</label>
-                    <input name="leetcode" value={profile.leetcode || ''} onChange={handleChange} placeholder="LeetCode URL" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Dev.to Username</label>
-                    <input name="dev_username" value={profile.dev_username || ''} onChange={handleChange} placeholder="Dev.to Username" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-
-                {/* Resume & Image */}
-                <div className="flex flex-col">
-                    <label className="mb-1 text-sm text-gray-400">Resume URL</label>
-                    <input name="resume" value={profile.resume || ''} onChange={handleChange} placeholder="Resume URL" className="bg-[#0d1224] p-2 rounded border border-[#2a3241]" />
-                </div>
-
-                <div className="md:col-span-2">
-                    <label className="block mb-2 text-sm text-gray-400">Profile Image</label>
-                    <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploading} className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-violet-50 file:text-violet-700 hover:file:bg-violet-100" />
-                    {profile.profile_image && <img src={profile.profile_image} alt="Profile" className="mt-2 h-32 w-32 object-cover rounded-full" />}
+            {/* Contact Section */}
+            <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider border-b border-[#2a3241] pb-2">
+                    Contact Information
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <InputField icon={Mail} label="Email" name="email" type="email" placeholder="your@email.com" />
+                    <InputField icon={Phone} label="Phone" name="phone" placeholder="+1 234 567 890" />
+                    <InputField icon={MapPin} label="Address" name="address" placeholder="City, Country" />
                 </div>
             </div>
-            <button type="submit" className="bg-[#16f2b3] text-[#0d1224] px-6 py-2 rounded font-bold hover:opacity-90">Save Profile</button>
+
+            {/* Social Links Section */}
+            <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider border-b border-[#2a3241] pb-2">
+                    Social Links
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <InputField icon={Github} label="GitHub" name="github" placeholder="https://github.com/username" />
+                    <InputField icon={Linkedin} label="LinkedIn" name="linkedin" placeholder="https://linkedin.com/in/username" />
+                    <InputField icon={Facebook} label="Facebook" name="facebook" placeholder="https://facebook.com/username" />
+                    <InputField icon={Twitter} label="Twitter" name="twitter" placeholder="https://twitter.com/username" />
+                    <InputField label="StackOverflow" name="stackoverflow" placeholder="https://stackoverflow.com/users/..." />
+                    <InputField label="LeetCode" name="leetcode" placeholder="https://leetcode.com/username" />
+                    <InputField label="Dev.to Username" name="dev_username" placeholder="your-dev-username" />
+                </div>
+            </div>
+
+            {/* Resume & Image Section */}
+            <div className="space-y-4">
+                <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider border-b border-[#2a3241] pb-2">
+                    Resume & Profile Image
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <InputField icon={FileText} label="Resume URL" name="resume" placeholder="Link to your resume" />
+                    <div className="flex flex-col">
+                        <label className="mb-1.5 text-sm text-gray-400 flex items-center gap-1.5">
+                            <ImageIcon size={14} />
+                            Profile Image
+                        </label>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageUpload}
+                            disabled={uploading}
+                            className="block w-full text-sm text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-violet-600 file:text-white hover:file:bg-violet-700 cursor-pointer"
+                        />
+                    </div>
+                </div>
+                {profile.profile_image && (
+                    <div className="flex justify-center sm:justify-start">
+                        <img
+                            src={profile.profile_image}
+                            alt="Profile"
+                            className="h-24 w-24 object-cover rounded-full border-2 border-[#16f2b3]"
+                        />
+                    </div>
+                )}
+            </div>
+
+            {/* Submit Button */}
+            <div className="pt-4 border-t border-[#2a3241]">
+                <button
+                    type="submit"
+                    disabled={saving || uploading}
+                    className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#16f2b3] text-[#0d1224] px-8 py-3 rounded-lg font-bold hover:opacity-90 transition-all disabled:opacity-50"
+                >
+                    <Save size={18} />
+                    {saving ? 'Saving...' : 'Save Profile'}
+                </button>
+            </div>
         </form>
     );
 }

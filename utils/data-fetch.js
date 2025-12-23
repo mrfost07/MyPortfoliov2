@@ -63,18 +63,30 @@ export async function getProjects() {
         console.warn('Error fetching projects:', error.message);
         return [];
     }
-    console.log('Fetched Projects:', JSON.stringify(data, null, 2)); // Debug log
     return data;
 }
 
-export async function getBlogs() {
+export async function getAchievements() {
     const { data, error } = await supabase
-        .from('blogs')
+        .from('achievements')
         .select('*')
-        .order('published_at', { ascending: false });
+        .order('order_index', { ascending: true });
 
     if (error) {
-        console.warn('Error fetching blogs:', error.message);
+        console.warn('Error fetching achievements:', error.message);
+        return [];
+    }
+    return data;
+}
+
+export async function getCertificates() {
+    const { data, error } = await supabase
+        .from('certificates')
+        .select('*')
+        .order('order_index', { ascending: true });
+
+    if (error) {
+        console.warn('Error fetching certificates:', error.message);
         return [];
     }
     return data;

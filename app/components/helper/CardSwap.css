@@ -2,6 +2,7 @@
     position: absolute;
     bottom: 0;
     right: 0;
+    /* Original desktop position - moved up by -10% */
     transform: translate(5%, -10%);
     transform-origin: bottom right;
     perspective: 900px;
@@ -10,6 +11,7 @@
 
 .card {
     position: absolute;
+    /* Original positioning - center of container */
     top: 50%;
     left: 50%;
     border-radius: 12px;
@@ -51,14 +53,27 @@
     margin: 4px 0 0 0;
 }
 
+/* Tablet and mobile - use relative positioning for better layout flow */
 @media (max-width: 768px) {
     .card-swap-container {
-        transform: scale(0.75) translate(25%, 25%);
+        position: relative;
+        bottom: auto;
+        right: auto;
+        transform: scale(0.9) translate(0%, 0%);
+        transform-origin: center center;
+    }
+
+    .card {
+        top: 55%;
     }
 }
 
 @media (max-width: 480px) {
     .card-swap-container {
-        transform: scale(0.55) translate(25%, 25%);
+        transform: scale(0.75) translate(0%, 0%);
+    }
+
+    .card {
+        top: 50%;
     }
 }

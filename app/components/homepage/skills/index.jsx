@@ -47,32 +47,41 @@ function Skills({ skills }) {
           play={true}
           direction="left"
         >
-          {skills.map((skill, id) => (
-            <div className="w-36 min-w-fit h-fit flex flex-col items-center justify-center transition-all duration-500 m-3 sm:m-5 rounded-lg group relative hover:scale-[1.15] cursor-pointer"
-              key={id}>
-              <div className="h-full w-full rounded-lg border border-[#1f223c] bg-[#11152c] shadow-none shadow-gray-50 group-hover:border-violet-500 transition-all duration-500">
-                <div className="flex -translate-y-[1px] justify-center">
-                  <div className="w-3/4">
-                    <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-violet-500 to-transparent" />
+          {skills.filter(skill => skill.is_enabled).map((skill, id) => {
+            const skillImage = skillsImage(skill.name);
+            return (
+              <div className="w-36 min-w-fit h-fit flex flex-col items-center justify-center transition-all duration-500 m-3 sm:m-5 rounded-lg group relative hover:scale-[1.15] cursor-pointer"
+                key={id}>
+                <div className="h-full w-full rounded-lg border border-[#1f223c] bg-[#11152c] shadow-none shadow-gray-50 group-hover:border-violet-500 transition-all duration-500">
+                  <div className="flex -translate-y-[1px] justify-center">
+                    <div className="w-3/4">
+                      <div className="h-[1px] w-full bg-gradient-to-r from-transparent via-violet-500 to-transparent" />
+                    </div>
                   </div>
-                </div>
-                <div className="flex flex-col items-center justify-center gap-3 p-6">
-                  <div className="h-8 sm:h-10">
-                    <Image
-                      src={skillsImage(skill.name)?.src}
-                      alt={skill.name}
-                      width={40}
-                      height={40}
-                      className="h-full w-auto rounded-lg"
-                    />
+                  <div className="flex flex-col items-center justify-center gap-3 p-6">
+                    <div className="h-8 sm:h-10">
+                      {skillImage?.src ? (
+                        <Image
+                          src={skillImage.src}
+                          alt={skill.name}
+                          width={40}
+                          height={40}
+                          className="h-full w-auto rounded-lg"
+                        />
+                      ) : (
+                        <div className="h-full w-10 bg-violet-500/20 rounded-lg flex items-center justify-center">
+                          <span className="text-xs text-violet-400">{skill.name.charAt(0)}</span>
+                        </div>
+                      )}
+                    </div>
+                    <p className="text-white text-sm sm:text-lg">
+                      {skill.name}
+                    </p>
                   </div>
-                  <p className="text-white text-sm sm:text-lg">
-                    {skill.name}
-                  </p>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </Marquee>
       </motion.div>
     </div>
