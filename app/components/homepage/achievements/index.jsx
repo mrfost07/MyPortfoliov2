@@ -2,11 +2,12 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Trophy } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Trophy, X } from 'lucide-react';
 
 function Achievements({ achievements }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [direction, setDirection] = useState(0);
+    const [selectedAchievement, setSelectedAchievement] = useState(null);
 
     const hasAchievements = achievements && achievements.length > 0;
 
@@ -79,8 +80,11 @@ function Achievements({ achievements }) {
                 >
                     {/* Image Container with Arrows Inside */}
                     <div className="relative w-full">
-                        {/* Image */}
-                        <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
+                        {/* Image - Clickable */}
+                        <div
+                            className="relative overflow-hidden rounded-lg aspect-[4/3] cursor-pointer"
+                            onClick={() => setSelectedAchievement(currentAchievement)}
+                        >
                             <AnimatePresence initial={false} custom={direction} mode="wait">
                                 <motion.div
                                     key={currentIndex}
@@ -111,7 +115,7 @@ function Achievements({ achievements }) {
                             {/* Left Arrow - Inside Image */}
                             {achievements.length > 1 && (
                                 <button
-                                    onClick={prevSlide}
+                                    onClick={(e) => { e.stopPropagation(); prevSlide(); }}
                                     className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-white/10 backdrop-blur-sm text-white/70 hover:bg-white/20 hover:text-white transition-all z-10"
                                     aria-label="Previous"
                                 >
@@ -122,7 +126,7 @@ function Achievements({ achievements }) {
                             {/* Right Arrow - Inside Image */}
                             {achievements.length > 1 && (
                                 <button
-                                    onClick={nextSlide}
+                                    onClick={(e) => { e.stopPropagation(); nextSlide(); }}
                                     className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 p-2 sm:p-3 rounded-full bg-white/10 backdrop-blur-sm text-white/70 hover:bg-white/20 hover:text-white transition-all z-10"
                                     aria-label="Next"
                                 >
@@ -182,6 +186,60 @@ function Achievements({ achievements }) {
                     <p>No achievements to display yet.</p>
                 </div>
             )}
+
+            {/* Modal */}
+            <AnimatePresence>
+                {selectedAchievement && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90"
+                        onClick={() => setSelectedAchievement(null)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="relative max-w-4xl w-full"
+                        >
+                            <button
+                                onClick={() => setSelectedAchievement(null)}
+                                className="absolute -top-12 right-0 p-2 text-white hover:text-[#16f2b3] transition-colors"
+                            >
+                                <X size={28} />
+                            </button>
+
+                            {selectedAchievement.image && (
+                                <div className="relative w-full h-[50vh] sm:h-[60vh] rounded-lg overflow-hidden">
+                                    <Image
+                                        src={selectedAchievement.image}
+                                        alt={selectedAchievement.title}
+                                        fill
+                                        className="object-contain"
+                                        sizes="100vw"
+                                    />
+                                </div>
+                            )}
+
+                            <div className="text-center mt-4">
+                                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                                    {selectedAchievement.title}
+                                </h2>
+                                {selectedAchievement.date && (
+                                    <p className="text-[#16f2b3] mt-1">{selectedAchievement.date}</p>
+                                )}
+                                {selectedAchievement.description && (
+                                    <p className="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                                        {selectedAchievement.description}
+                                    </p>
+                                )}
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 }
