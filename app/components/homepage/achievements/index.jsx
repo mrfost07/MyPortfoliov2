@@ -1,5 +1,6 @@
 "use client";
 import { useState, useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import { ChevronLeft, ChevronRight, Trophy, X } from 'lucide-react';
@@ -30,6 +31,18 @@ function Achievements({ achievements }) {
         return () => clearInterval(interval);
     }, [nextSlide, hasAchievements, achievements?.length]);
 
+    // Lock body scroll when modal is open
+    useEffect(() => {
+        if (selectedAchievement) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [selectedAchievement]);
+
     const slideVariants = {
         enter: (direction) => ({
             x: direction > 0 ? 100 : -100,
@@ -50,7 +63,7 @@ function Achievements({ achievements }) {
     const currentAchievement = hasAchievements ? achievements[currentIndex] : null;
 
     return (
-        <div id='achievements' className="relative z-50 my-12 lg:my-24">
+        <div id='achievements' className="relative my-12 lg:my-24">
             {/* Section Header */}
             <motion.div
                 className="flex justify-center my-5 lg:py-8"
@@ -187,59 +200,63 @@ function Achievements({ achievements }) {
                 </div>
             )}
 
-            {/* Modal */}
-            <AnimatePresence>
-                {selectedAchievement && (
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90"
-                        onClick={() => setSelectedAchievement(null)}
-                    >
+            {/* Modal - Rendered via Portal to escape stacking context */}
+            {typeof window !== 'undefined' && createPortal(
+                <AnimatePresence>
+                    {selectedAchievement && (
                         <motion.div
-                            initial={{ scale: 0.9, opacity: 0 }}
-                            animate={{ scale: 1, opacity: 1 }}
-                            exit={{ scale: 0.9, opacity: 0 }}
-                            onClick={(e) => e.stopPropagation()}
-                            className="relative max-w-4xl w-full"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/90"
+                            onClick={() => setSelectedAchievement(null)}
+                            style={{ position: 'fixed' }}
                         >
-                            <button
-                                onClick={() => setSelectedAchievement(null)}
-                                className="absolute -top-12 right-0 p-2 text-white hover:text-[#16f2b3] transition-colors"
+                            <motion.div
+                                initial={{ scale: 0.9, opacity: 0 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                exit={{ scale: 0.9, opacity: 0 }}
+                                onClick={(e) => e.stopPropagation()}
+                                className="relative max-w-4xl w-full"
                             >
-                                <X size={28} />
-                            </button>
+                                <button
+                                    onClick={() => setSelectedAchievement(null)}
+                                    className="absolute -top-12 right-0 p-2 text-white hover:text-[#16f2b3] transition-colors"
+                                >
+                                    <X size={28} />
+                                </button>
 
-                            {selectedAchievement.image && (
-                                <div className="relative w-full h-[50vh] sm:h-[60vh] rounded-lg overflow-hidden">
-                                    <Image
-                                        src={selectedAchievement.image}
-                                        alt={selectedAchievement.title}
-                                        fill
-                                        className="object-contain"
-                                        sizes="100vw"
-                                    />
+                                {selectedAchievement.image && (
+                                    <div className="relative w-full h-[50vh] sm:h-[60vh] rounded-lg overflow-hidden">
+                                        <Image
+                                            src={selectedAchievement.image}
+                                            alt={selectedAchievement.title}
+                                            fill
+                                            className="object-contain"
+                                            sizes="100vw"
+                                        />
+                                    </div>
+                                )}
+
+                                <div className="text-center mt-4">
+                                    <h2 className="text-xl sm:text-2xl font-bold text-white">
+                                        {selectedAchievement.title}
+                                    </h2>
+                                    {selectedAchievement.date && (
+                                        <p className="text-[#16f2b3] mt-1">{selectedAchievement.date}</p>
+                                    )}
+                                    {selectedAchievement.description && (
+                                        <p className="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
+                                            {selectedAchievement.description}
+                                        </p>
+                                    )}
                                 </div>
-                            )}
-
-                            <div className="text-center mt-4">
-                                <h2 className="text-xl sm:text-2xl font-bold text-white">
-                                    {selectedAchievement.title}
-                                </h2>
-                                {selectedAchievement.date && (
-                                    <p className="text-[#16f2b3] mt-1">{selectedAchievement.date}</p>
-                                )}
-                                {selectedAchievement.description && (
-                                    <p className="text-gray-400 text-sm mt-2 max-w-2xl mx-auto">
-                                        {selectedAchievement.description}
-                                    </p>
-                                )}
-                            </div>
+                            </motion.div>
                         </motion.div>
-                    </motion.div>
-                )}
-            </AnimatePresence>
+                    )}
+                </AnimatePresence>,
+                document.body
+            )}
         </div>
     );
 }

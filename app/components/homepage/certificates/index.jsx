@@ -52,7 +52,7 @@ function Certificates({ certificates }) {
     const currentCertificate = hasCertificates ? certificates[currentIndex] : null;
 
     return (
-        <div id='certificates' className="relative z-50 my-12 lg:my-24">
+        <div id='certificates' className="relative my-12 lg:my-24">
             {/* Section Header */}
             <motion.div
                 className="flex justify-center my-5 lg:py-8"
