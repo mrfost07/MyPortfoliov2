@@ -129,7 +129,7 @@ function ContactSection({ profile }) {
               </motion.p>
             </div>
             <motion.div
-              className="mt-8 lg:mt-16 flex items-center gap-5 lg:gap-10"
+              className="mt-8 lg:mt-16 flex flex-wrap items-center gap-3 sm:gap-5 lg:gap-10"
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
