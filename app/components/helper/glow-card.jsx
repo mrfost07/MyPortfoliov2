@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 
-const GlowCard = ({ children , identifier}) => {
+const GlowCard = ({ children, identifier }) => {
   useEffect(() => {
     const CONTAINER = document.querySelector(`.glow-container-${identifier}`);
     const CARDS = document.querySelectorAll(`.glow-card-${identifier}`);
@@ -47,7 +47,21 @@ const GlowCard = ({ children , identifier}) => {
       }
     };
 
-    document.body.addEventListener('pointermove', UPDATE);
+    // Throttle pointermove for performance
+    let ticking = false;
+    let lastEvent = null;
+    const throttledUpdate = (event) => {
+      lastEvent = event;
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          UPDATE(lastEvent);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    document.body.addEventListener('pointermove', throttledUpdate);
 
     const RESTYLE = () => {
       CONTAINER.style.setProperty('--gap', CONFIG.gap);
@@ -64,7 +78,7 @@ const GlowCard = ({ children , identifier}) => {
 
     // Cleanup event listener
     return () => {
-      document.body.removeEventListener('pointermove', UPDATE);
+      document.body.removeEventListener('pointermove', throttledUpdate);
     };
   }, [identifier]);
 

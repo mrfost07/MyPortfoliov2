@@ -47,6 +47,7 @@ const Hyperspeed = ({
 }) => {
     const hyperspeed = useRef(null);
     const appRef = useRef(null);
+    const isVisibleRef = useRef(true);
 
     useEffect(() => {
         if (appRef.current) {
@@ -610,6 +611,11 @@ const Hyperspeed = ({
 
             tick() {
                 if (this.disposed || !this) return;
+                // Skip rendering if not visible (performance optimization)
+                if (!this.isVisible) {
+                    requestAnimationFrame(this.tick);
+                    return;
+                }
                 if (resizeRendererToDisplaySize(this.renderer, this.setSize)) {
                     const canvas = this.renderer.domElement;
                     this.camera.aspect = canvas.clientWidth / canvas.clientHeight;
@@ -619,6 +625,10 @@ const Hyperspeed = ({
                 this.render(delta);
                 this.update(delta);
                 requestAnimationFrame(this.tick);
+            }
+
+            setVisibility(visible) {
+                this.isVisible = visible;
             }
         }
 
@@ -1112,7 +1122,22 @@ const Hyperspeed = ({
             myApp.loadAssets().then(myApp.init);
         })();
 
+        // Add visibility observer for performance optimization
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisibleRef.current = entry.isIntersecting;
+                if (appRef.current) {
+                    appRef.current.setVisibility(entry.isIntersecting);
+                }
+            },
+            { threshold: 0.05 }
+        );
+        if (hyperspeed.current) {
+            observer.observe(hyperspeed.current);
+        }
+
         return () => {
+            observer.disconnect();
             if (appRef.current) {
                 appRef.current.dispose();
             }

@@ -147,27 +147,62 @@ const CardSwap = ({
         };
 
         swap();
-        intervalRef.current = window.setInterval(swap, delay);
+
+        // Visibility-based interval for performance optimization
+        let isVisible = true;
+        const startInterval = () => {
+            if (!intervalRef.current && isVisible) {
+                intervalRef.current = window.setInterval(swap, delay);
+            }
+        };
+        const stopInterval = () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                isVisible = entry.isIntersecting;
+                if (isVisible) {
+                    startInterval();
+                } else {
+                    stopInterval();
+                    tlRef.current?.pause();
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        if (container.current) {
+            observer.observe(container.current);
+        }
+        startInterval();
 
         if (pauseOnHover && container.current) {
             const node = container.current;
             const pause = () => {
                 tlRef.current?.pause();
-                clearInterval(intervalRef.current);
+                stopInterval();
             };
             const resume = () => {
                 tlRef.current?.play();
-                intervalRef.current = window.setInterval(swap, delay);
+                if (isVisible) startInterval();
             };
             node.addEventListener('mouseenter', pause);
             node.addEventListener('mouseleave', resume);
             return () => {
                 node.removeEventListener('mouseenter', pause);
                 node.removeEventListener('mouseleave', resume);
-                clearInterval(intervalRef.current);
+                observer.disconnect();
+                stopInterval();
             };
         }
-        return () => clearInterval(intervalRef.current);
+        return () => {
+            observer.disconnect();
+            stopInterval();
+        };
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
 
