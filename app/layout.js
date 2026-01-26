@@ -11,7 +11,7 @@ import "./css/globals.scss";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Renier F - Software Developer",
+  title: "Mark Renier B. Fostanes",
   description:
     "I am a passionate Software Engineer currently pursuing a degree in Computer Science at Surigao del Norte State University. My journey in the world of technology is driven by a deep enthusiasm for coding, problem-solving, and an unwavering commitment to learning new technologies.",
   verification: {
