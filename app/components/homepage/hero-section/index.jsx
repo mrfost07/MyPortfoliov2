@@ -8,7 +8,32 @@ import { MdDownload } from "react-icons/md";
 import { RiContactsFill } from "react-icons/ri";
 import { SiLeetcode } from "react-icons/si";
 import CardSwap, { Card } from "../../helper/CardSwap";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+
+// Parses description text and replaces {name} and {designation} with colored spans
+function renderHeroDescription(description, profile) {
+  if (!description) return null;
+
+  // Split by {name} and {designation} placeholders
+  const parts = description.split(/(\{name\}|\{designation\})/gi);
+
+  return parts.map((part, i) => {
+    if (part.toLowerCase() === '{name}') {
+      return <span key={i} className="text-pink-500">{profile.name}</span>;
+    }
+    if (part.toLowerCase() === '{designation}') {
+      return <span key={i} className="text-[#16f2b3]">{profile.designation}</span>;
+    }
+    // Handle newlines as <br />
+    const lines = part.split('\n');
+    return lines.map((line, j) => (
+      <span key={`${i}-${j}`}>
+        {line}
+        {j < lines.length - 1 && <br />}
+      </span>
+    ));
+  });
+}
 
 function HeroSection({ profile, projects = [] }) {
   const [isMobile, setIsMobile] = useState(false);
@@ -52,12 +77,17 @@ function HeroSection({ profile, projects = [] }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Hello, <br />
-            This is {' '}
-            <span className="text-pink-500">{profile.name}</span>
-            {` , I'm a Professional `}
-            <span className="text-[#16f2b3]">{profile.designation}</span>
-            .
+            {profile.description
+              ? renderHeroDescription(profile.description, profile)
+              : <>
+                Hello, <br />
+                This is {' '}
+                <span className="text-pink-500">{profile.name}</span>
+                {` , I'm a Professional `}
+                <span className="text-[#16f2b3]">{profile.designation}</span>
+                .
+              </>
+            }
           </motion.h1>
 
           <motion.div

@@ -143,7 +143,7 @@ export default function ProfileForm() {
                     <InputField icon={User} label="Name" name="name" placeholder="Your full name" required value={profile.name} onChange={handleChange} />
                     <InputField label="Designation" name="designation" placeholder="e.g., Software Engineer" required value={profile.designation} onChange={handleChange} />
                 </div>
-                <TextAreaField label="Hero Description" name="description" placeholder="Short tagline for Hero section" rows={2} value={profile.description} onChange={handleChange} />
+                <TextAreaField label="Hero Description — use {name} for pink text, {designation} for green text" name="description" placeholder="Hello,&#10;This is {name}, I'm a Professional {designation}." rows={3} value={profile.description} onChange={handleChange} />
                 <TextAreaField label="About Me (Bio)" name="bio" placeholder="Detailed bio for the About section" rows={4} value={profile.bio} onChange={handleChange} />
             </div>
 
